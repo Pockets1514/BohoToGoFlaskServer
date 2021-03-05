@@ -22,7 +22,7 @@ class User(db.Model):
     address = db.Column(db.String(50), unique=False)
     city = db.Column(db.String(30), unique=False)
     state = db.Column(db.String(30), unique=False)
-    phone = db.Column(db.number(10), unique=False)
+    phone = db.Column(db.Integer, unique=False)
 
     def __init__(self, firstName, lastName, email, password, streetAddress, city, state, phone):
         self.firstName = firstName
@@ -40,3 +40,27 @@ class UserSchema(ma.Schema) :
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+
+@app.route('/user', methods=["POST"])
+def add_user():
+    firstName = request.json['firstName']
+    lastName = request.json['lastName']
+    email = request.json['email']
+    password = request.json['password']
+    streetAddress = request.json['streetAddress']
+    city = request.json['city']
+    state = request.json['state']
+    phone = request.json['phone']
+
+    new_user = User(firstName, lastName, email, password, streetAddress, city, state, phone)
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return user_schema.jsonify(user)
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    all_users = User.query.all()
+    result = users_schema.dump(all_users)
+    return jsonify(result)
