@@ -5,9 +5,6 @@ import os
 
 app = Flask(__name__)
 
-if __name__ == '__main__' : 
-    app.run(debug=True)
-
 basedir =os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.sqlite')
 db = SQLAlchemy(app)
@@ -57,6 +54,8 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
+    user = User.query.get(new_user.id)
+
     return user_schema.jsonify(user)
 
 @app.route('/users', methods=['GET'])
@@ -64,3 +63,39 @@ def get_users():
     all_users = User.query.all()
     result = users_schema.dump(all_users)
     return jsonify(result)
+
+@app.route('/user/<id>', methods=["PUT"])
+def user_update(id):
+    user = User.query.get(id)
+    firstName = request.json['firstName']
+    lastName = request.json['lastName']
+    email = request.json['email']
+    password = request.json['password']
+    streetAddress = request.json['streetAddress']
+    city = request.json['city']
+    state = request.json['state']
+    phone = request.json['phone']
+
+    user.firstName = firstName
+    user.lastName = lastName
+    user.email = email
+    user.password = password
+    user.streetAddress = streetAddress
+    user.city = city
+    user.state = state
+    user.phone = phone
+
+    db.session.commit()
+    return user_schema.jsonify(user)
+
+@app.route('/user/<id>', methods=['DELETE'])    
+def user_delete(id):
+    user = User.query.get(id)
+        
+    db.session.delete(user)
+    db.session.commit()
+
+    return f'successfully deleted {user}' 
+
+if __name__ == '__main__':
+    app.run(debug=True)
