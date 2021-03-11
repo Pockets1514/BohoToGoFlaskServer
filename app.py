@@ -16,7 +16,7 @@ class User(db.Model):
     lastName = db.Column(db.String(30), unique=False)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(30), unique=False)
-    address = db.Column(db.String(50), unique=False)
+    streetAddress = db.Column(db.String(50), unique=False)
     city = db.Column(db.String(30), unique=False)
     state = db.Column(db.String(30), unique=False)
     phone = db.Column(db.Integer, unique=False)
@@ -96,6 +96,97 @@ def user_delete(id):
     db.session.commit()
 
     return f'successfully deleted {user}' 
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cakeFlavor = db.Column(db.String(30), unique=False)
+    frostingFlavor = db.Column(db.String(30), unique=False)
+    toppings = db.Column(db.String(30), unique=False)
+    filling = db.Column(db.String(30), unique=False)
+    quantity = db.Column(db.Integer, unique=False)
+    pickupDate = db.Column(db.String(30), unique=False)
+    specialRequests = db.Column(db.String(30), unique=False)
+
+    def __init__(self, cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests, phone):
+        self.cakeFlavor = cakeFlavor
+        self.frostingFlavor = frostingFlavor
+        self.toppings = toppings
+        self.filling = filling
+        self.quantity = quantity
+        self.pickupDate = pickupDate
+        self.specialRequests = specialRequests
+        self.phone = phone
+        self.user = user
+
+class OrderSchema(ma.Schema) :
+    class Meta:
+        fields = ('cakeFlavor', 'frostingFlavor', 'toppings', 'filling', 'quantity', 'pickupDate', 'specialRequests', 'phone', 'user')
+
+order_schema = OrderSchema()
+orders_schema = OrderSchema(many=True)
+
+@app.route('/order', methods=["POST"])
+def add_order():
+    cakeFlavor = request.json['cakeFlavor']
+    frostingFlavor = request.json['frostingFlavor']
+    toppings = request.json['toppings']
+    filling = request.json['filling']
+    quantity = request.json['quantity']
+    pickupDate = request.json['pickupDate']
+    specialRequests = request.json['specialRequests']
+    phone = request.json['phone']
+    user = request.json['user']
+
+    new_order = Order(cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests, phone, user)
+
+    db.session.add(new_order)
+    db.session.commit()
+
+    order.query.get(new_order.id)
+
+    return order_schema.jsonify(order)
+
+@app.route('/orders', methods=['GET'])
+def get_orders():
+    all_orders = Order.query.all()
+    result = orders_schema.dump(all_orders)
+    return jsonify(result)
+
+@app.route('/order/<id>', methods=["PUT"])
+def order_update(id):
+    cakeFlavor = request.json['cakeFlavor']
+    frostingFlavor = request.json['frostingFlavor']
+    toppings = request.json['toppings']
+    filling = request.json['filling']
+    quantity = request.json['quantity']
+    pickupDate = request.json['pickupDate']
+    specialRequests = request.json['specialRequests']
+    phone = request.json['phone']
+    user = request.json['user']
+
+    
+    order.cakeFlavor = cakeFlavor
+    order.frostingFlavor = frostingFlavor
+    order.toppings = toppings
+    order.filling = filling
+    order.quantity = quantity
+    order.pickupDate = pickupDate
+    order.specialRequests = specialRequests
+    order.phone = phone
+    order.user = user
+
+    db.session.commit()
+    
+    return order_schema.jsonify(order)
+
+    @app.route('./order/<id>', methods=['DELETE'])
+    def order_delete(id):
+        order = Order.query.get(id)
+
+        db.sessiondelete(order)
+        db.session.commit()
+
+        return f'successfully deleted {order}'
 
 if __name__ == '__main__':
     app.run(debug=True)
