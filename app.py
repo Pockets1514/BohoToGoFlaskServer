@@ -105,9 +105,9 @@ class Order(db.Model):
     filling = db.Column(db.String(30), unique=False)
     quantity = db.Column(db.Integer, unique=False)
     pickupDate = db.Column(db.String(30), unique=False)
-    specialRequests = db.Column(db.String(30), unique=False)
+    specialRequests = db.Column(db.String(30), unique=False)    
 
-    def __init__(self, cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests, phone):
+    def __init__(self, cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests):
         self.cakeFlavor = cakeFlavor
         self.frostingFlavor = frostingFlavor
         self.toppings = toppings
@@ -115,12 +115,10 @@ class Order(db.Model):
         self.quantity = quantity
         self.pickupDate = pickupDate
         self.specialRequests = specialRequests
-        self.phone = phone
-        self.user = user
 
 class OrderSchema(ma.Schema) :
     class Meta:
-        fields = ('cakeFlavor', 'frostingFlavor', 'toppings', 'filling', 'quantity', 'pickupDate', 'specialRequests', 'phone', 'user')
+        fields = ('cakeFlavor', 'frostingFlavor', 'toppings', 'filling', 'quantity', 'pickupDate', 'specialRequests')
 
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
@@ -134,15 +132,14 @@ def add_order():
     quantity = request.json['quantity']
     pickupDate = request.json['pickupDate']
     specialRequests = request.json['specialRequests']
-    phone = request.json['phone']
-    user = request.json['user']
 
-    new_order = Order(cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests, phone, user)
+
+    new_order = Order(cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests)
 
     db.session.add(new_order)
     db.session.commit()
 
-    order.query.get(new_order.id)
+    order = Order.query.get(new_order.id)
 
     return order_schema.jsonify(order)
 
@@ -161,9 +158,6 @@ def order_update(id):
     quantity = request.json['quantity']
     pickupDate = request.json['pickupDate']
     specialRequests = request.json['specialRequests']
-    phone = request.json['phone']
-    user = request.json['user']
-
     
     order.cakeFlavor = cakeFlavor
     order.frostingFlavor = frostingFlavor
@@ -172,8 +166,6 @@ def order_update(id):
     order.quantity = quantity
     order.pickupDate = pickupDate
     order.specialRequests = specialRequests
-    order.phone = phone
-    order.user = user
 
     db.session.commit()
     
