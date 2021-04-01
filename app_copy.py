@@ -1,11 +1,35 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from flask_cors import CORS
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import os
 
+# class RequestHandler(BaseHTTPRequestHandler):
+
+#     def _send_cors_headers(self):
+#         self.send_header("Access-Control-Allow-Origin", "http://localhost:3000")
+#         self.send_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE")
+#         self.send_header("Access-Control-Allow-Headers", "*")
+
+#     def do_GET(self):
+#         self.send_response(200)
+#         self._send_cors_headers()
+#         self.end_headers()
+#     def do_POST(self):
+#         self.send_response(200)
+#         self._send_cors_headers()
+#         self.end_headers()
+#     def do_PUT(self):
+#         self.send_response(200)
+#         self._send_cors_headers()()
+#         self.end_headers()
+#     def do_DELETE(self):
+#         self.send_response(200)
+#         self._send_cors_headers()
+#         self.end_headers()
+
 app = Flask(__name__)
-CORS(app)
+
 
 basedir =os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.sqlite')
@@ -122,6 +146,7 @@ order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
 @app.route('/order', methods=["POST"])
+@cross_origin(supports_credentials=True)
 def add_order():
     cakeFlavor = request.json['cakeFlavor']
     frostingFlavor = request.json['frostingFlavor']
