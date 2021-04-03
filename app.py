@@ -40,13 +40,13 @@ users_schema = UserSchema(many=True)
 
 @app.route('/user', methods=["POST"])
 def add_user():
-    firstName = request.json['firstName']
-    lastName = request.json['lastName']
+    firstName = request.json['firstname']
+    lastName = request.json['lastname']
     email = request.json['email']
     password = request.json['password']
     city = request.json['city']
     state = request.json['state']
-    phone = request.json['phone']
+    phone = request.json['phonenumber']
 
     new_user = User(firstName, lastName, email, password, city, state, phone)
 
@@ -123,13 +123,13 @@ orders_schema = OrderSchema(many=True)
 
 @app.route('/order', methods=["POST"])
 def add_order():
-    cakeFlavor = request.json['cakeFlavor']
-    frostingFlavor = request.json['frostingFlavor']
+    cakeFlavor = request.json['cake_flavor']
+    frostingFlavor = request.json['frosting_flavor']
     toppings = request.json['toppings']
     filling = request.json['filling']
     quantity = request.json['quantity']
-    pickupDate = request.json['pickupDate']
-    specialRequests = request.json['specialRequests']
+    pickupDate = request.json['pickup_date']
+    specialRequests = request.json['special_requests']
 
 
     new_order = Order(cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests)
