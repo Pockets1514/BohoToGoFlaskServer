@@ -21,8 +21,10 @@ class User(db.Model):
     city = db.Column(db.String(30), unique=False)
     state = db.Column(db.String(30), unique=False)
     phone = db.Column(db.Integer, unique=False)
+    question = db.Column(db.String(50), unique=False)
+    answer =  db.Column(db.String(30), unique=False)
 
-    def __init__(self, firstName, lastName, email, password, city, state, phone):
+    def __init__(self, firstName, lastName, email, password, city, state, phone, question, answer):
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
@@ -30,10 +32,12 @@ class User(db.Model):
         self.city = city
         self.state = state
         self.phone = phone
+        self.question = question
+        self.answer = answer
 
 class UserSchema(ma.Schema) :
     class Meta:
-        fields = ('firstName', 'lastName', 'email', 'password', 'city', 'state', 'phone')
+       fields = ('firstName', 'lastName', 'email', 'password', 'city', 'state', 'phone', 'question', 'answer')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -46,9 +50,11 @@ def add_user():
     password = request.json['password']
     city = request.json['city']
     state = request.json['state']
-    phone = request.json['phonenumber']
+    phone = request.json['phone']
+    question = request.json['question']
+    answer = request.json['answer']
 
-    new_user = User(firstName, lastName, email, password, city, state, phone)
+    new_user = User(firstName, lastName, email, password, city, state, phone, question, answer)
 
     db.session.add(new_user)
     db.session.commit()
@@ -73,6 +79,8 @@ def update_user(id):
     city = request.json['city']
     state = request.json['state']
     phone = request.json['phone']
+    question = request.json['question']
+    answer = request.json['answer']
 
     user.firstName = firstName
     user.lastName = lastName
@@ -81,6 +89,9 @@ def update_user(id):
     user.city = city
     user.state = state
     user.phone = phone
+    user.question = question
+    user.answer = answer
+
 
 
     db.session.commit()
