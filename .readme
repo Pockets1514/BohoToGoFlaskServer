@@ -1,0 +1,28 @@
+       
+       
+       
+For Postman tests, uses model below for user form
+    
+    {
+    "firstname" : "Steve",
+    "lastname" : "Brown",
+    "email" : "email@email.com",
+    "password" : "1234",
+    "city" : "Bangor",
+    "state" : "Maine",
+    "phone" : "1234567890",
+    "question" : "What is your first name?",
+    "answer" : "Steve"
+    }
+
+For Postman tests, uses model below for user form
+
+    {
+    "cake_flavor" : "chocolate",
+    "frosting_flavor" : "vanilla",
+    "toppings" : "sprinkles",
+    "filling" : "raspberry",
+    "quantity" : "6",
+    "pickup_date" : "04/12/2021",
+    "special_requests" : "requests"
+    }

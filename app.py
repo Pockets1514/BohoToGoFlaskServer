@@ -14,8 +14,8 @@ ma = Marshmallow(app)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(30), unique=False)
-    lastName = db.Column(db.String(30), unique=False)
+    firstname = db.Column(db.String(30), unique=False)
+    lastname = db.Column(db.String(30), unique=False)
     email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(30), unique=False)
     city = db.Column(db.String(30), unique=False)
@@ -24,9 +24,9 @@ class User(db.Model):
     question = db.Column(db.String(50), unique=False)
     answer =  db.Column(db.String(30), unique=False)
 
-    def __init__(self, firstName, lastName, email, password, city, state, phone, question, answer):
-        self.firstName = firstName
-        self.lastName = lastName
+    def __init__(self, firstname, lastname, email, password, city, state, phone, question, answer):
+        self.firstname = firstname
+        self.lastname = lastname
         self.email = email
         self.password = password
         self.city = city
@@ -37,15 +37,15 @@ class User(db.Model):
 
 class UserSchema(ma.Schema) :
     class Meta:
-       fields = ('firstName', 'lastName', 'email', 'password', 'city', 'state', 'phone', 'question', 'answer')
+       fields = ('firstname', 'lastname', 'email', 'password', 'city', 'state', 'phone', 'question', 'answer')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 @app.route('/user', methods=["POST"])
 def add_user():
-    firstName = request.json['firstname']
-    lastName = request.json['lastname']
+    firstname = request.json['firstname']
+    lastname = request.json['lastname']
     email = request.json['email']
     password = request.json['password']
     city = request.json['city']
@@ -54,7 +54,7 @@ def add_user():
     question = request.json['question']
     answer = request.json['answer']
 
-    new_user = User(firstName, lastName, email, password, city, state, phone, question, answer)
+    new_user = User(firstname, lastname, email, password, city, state, phone, question, answer)
 
     db.session.add(new_user)
     db.session.commit()
@@ -72,8 +72,8 @@ def get_users():
 @app.route('/user/<id>', methods=["PUT"])
 def update_user(id):
     user = User.query.get(id)
-    firstName = request.json['firstName']
-    lastName = request.json['lastName']
+    firstname = request.json['firstname']
+    lastname = request.json['lastname']
     email = request.json['email']
     password = request.json['password']
     city = request.json['city']
@@ -82,8 +82,8 @@ def update_user(id):
     question = request.json['question']
     answer = request.json['answer']
 
-    user.firstName = firstName
-    user.lastName = lastName
+    user.firstname = firstname
+    user.lastname = lastname
     user.email = email
     user.password = password
     user.city = city
@@ -91,8 +91,6 @@ def update_user(id):
     user.phone = phone
     user.question = question
     user.answer = answer
-
-
 
     db.session.commit()
     return user_schema.jsonify(user)
@@ -108,42 +106,41 @@ def user_delete(id):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cakeFlavor = db.Column(db.String(30), unique=False)
-    frostingFlavor = db.Column(db.String(30), unique=False)
+    cake_flavor = db.Column(db.String(30), unique=False)
+    frosting_flavor = db.Column(db.String(30), unique=False)
     toppings = db.Column(db.String(30), unique=False)
     filling = db.Column(db.String(30), unique=False)
     quantity = db.Column(db.Integer, unique=False)
-    pickupDate = db.Column(db.String(30), unique=False)
-    specialRequests = db.Column(db.String(30), unique=False)    
+    pickup_date = db.Column(db.String(30), unique=False)
+    special_requests = db.Column(db.String(30), unique=False) 
 
-    def __init__(self, cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests):
-        self.cakeFlavor = cakeFlavor
-        self.frostingFlavor = frostingFlavor
+    def __init__(self, cake_flavor, frosting_flavor, toppings, filling, quantity, pickup_date, special_requests):
+        self.cake_flavor = cake_flavor
+        self.frosting_flavor = frosting_flavor
         self.toppings = toppings
         self.filling = filling
         self.quantity = quantity
-        self.pickupDate = pickupDate
-        self.specialRequests = specialRequests
+        self.pickup_date = pickup_date
+        self.special_requests = special_requests
 
 class OrderSchema(ma.Schema) :
     class Meta:
-        fields = ('cakeFlavor', 'frostingFlavor', 'toppings', 'filling', 'quantity', 'pickupDate', 'specialRequests')
+        fields = ('cake_flavor', 'frosting_flavor', 'toppings', 'filling', 'quantity', 'pickup_date', 'special_requests')
 
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
 @app.route('/order', methods=["POST"])
 def add_order():
-    cakeFlavor = request.json['cake_flavor']
-    frostingFlavor = request.json['frosting_flavor']
+    cake_flavor = request.json['cake_flavor']
+    frosting_flavor = request.json['frosting_flavor']
     toppings = request.json['toppings']
     filling = request.json['filling']
     quantity = request.json['quantity']
-    pickupDate = request.json['pickup_date']
-    specialRequests = request.json['special_requests']
-
-
-    new_order = Order(cakeFlavor, frostingFlavor, toppings, filling, quantity, pickupDate, specialRequests)
+    pickup_date = request.json['pickup_date']
+    special_requests = request.json['special_requests']
+    
+    new_order = Order(cake_flavor, frosting_flavor, toppings, filling, quantity, pickup_date, special_requests)
 
     db.session.add(new_order)
     db.session.commit()
@@ -161,27 +158,27 @@ def get_orders():
 @app.route('/order/<id>', methods=["PUT"])
 def update_order(id):
     order = Order.query.get(id)
-    cakeFlavor = request.json['cakeFlavor']
-    frostingFlavor = request.json['frostingFlavor']
+    cake_flavor = request.json['cake_flavor']
+    frosting_flavor = request.json['frosting_flavor']
     toppings = request.json['toppings']
     filling = request.json['filling']
     quantity = request.json['quantity']
-    pickupDate = request.json['pickupDate']
-    specialRequests = request.json['specialRequests']
-    
-    order.cakeFlavor = cakeFlavor
-    order.frostingFlavor = frostingFlavor
+    pickup_date = request.json['pickup_date']
+    special_requests = request.json['special_requests']
+        
+    order.cake_flavor = cake_flavor
+    order.frosting_flavor = frosting_flavor
     order.toppings = toppings
     order.filling = filling
     order.quantity = quantity
-    order.pickupDate = pickupDate
-    order.specialRequests = specialRequests
-
+    order.pickup_date = pickup_date
+    order.special_requests = special_requests
+    
     db.session.commit()
     
     return order_schema.jsonify(order)
 
-    @app.route('./order/<id>', methods=['DELETE'])
+    @app.route('/order/<id>', methods=['DELETE'])
     def order_delete(id):
         order = Order.query.get(id)
 
@@ -192,3 +189,4 @@ def update_order(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
