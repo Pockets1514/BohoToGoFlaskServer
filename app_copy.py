@@ -4,30 +4,6 @@ from flask_marshmallow import Marshmallow
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import os
 
-# class RequestHandler(BaseHTTPRequestHandler):
-
-#     def _send_cors_headers(self):
-#         self.send_header("Access-Control-Allow-Origin", "http://localhost:3000")
-#         self.send_header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE")
-#         self.send_header("Access-Control-Allow-Headers", "*")
-
-#     def do_GET(self):
-#         self.send_response(200)
-#         self._send_cors_headers()
-#         self.end_headers()
-#     def do_POST(self):
-#         self.send_response(200)
-#         self._send_cors_headers()
-#         self.end_headers()
-#     def do_PUT(self):
-#         self.send_response(200)
-#         self._send_cors_headers()()
-#         self.end_headers()
-#     def do_DELETE(self):
-#         self.send_response(200)
-#         self._send_cors_headers()
-#         self.end_headers()
-
 app = Flask(__name__)
 
 
